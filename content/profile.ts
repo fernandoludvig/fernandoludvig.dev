@@ -20,8 +20,8 @@ export const profile = {
 
   links: {
     email: "fernandoludvig0@gmail.com",
-    github: "https://github.com/fernandoludvig", // TODO: confirmar o handle
-    linkedin: "https://www.linkedin.com/in/fernandoludvig/", // TODO: confirmar a URL
+    github: "https://github.com/fernandoludvig",
+    linkedin: "https://www.linkedin.com/in/fernandoludvig/",
   },
 
   stack: [

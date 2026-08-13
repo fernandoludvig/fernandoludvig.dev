@@ -47,8 +47,9 @@ Settings → Domains, sem refazer nada.
 
 ## Pendências
 
-- Confirmar as URLs de GitHub e LinkedIn em `content/profile.ts` (estão marcadas
-  com `TODO`).
 - Completar o case study `darwin-crm-integrations` — hoje está `draft: true`, com
   os campos marcados. Checar antes o que pode ser divulgado publicamente sobre
   cliente e números.
+- Trocar a métrica de impressões do `rdstation-crm-mcp` por adoção real (downloads
+  no npm, stars, issues de gente usando) assim que houver número. Alcance de post
+  é o proxy mais fraco da lista — serve enquanto o pacote é novo.
