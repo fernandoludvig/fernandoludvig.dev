@@ -5,31 +5,51 @@
  * toggle de tema — ganha com consistência e com não ter bug de contraste.
  */
 :root {
-  --background: #0b0b0d;
-  --surface: #131316;
-  --border: #26262c;
+  --background: #0a0a0d;
+  --surface: #121217;
+  --surface-2: #17171d;
+  --border: #232329;
+  --border-strong: #34343d;
   --foreground: #ededef;
   --muted: #9a9aa5;
-  --faint: #6a6a75;
+  --faint: #64646f;
   --accent: #f0b429;
   --accent-dim: #4a3a12;
+  --ok: #3ecf8e;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-faint: var(--faint);
   --color-accent: var(--accent);
   --color-accent-dim: var(--accent-dim);
+  --color-ok: var(--ok);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-newsreader);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
+  /* Duas camadas: um brilho âmbar quase subliminar no topo (a cor de marca
+     ancorando a página) e uma grade de pontos que dá textura de blueprint
+     sem competir com o texto. */
+  background-image:
+    radial-gradient(ellipse 90% 40% at 50% -10%, rgba(240, 180, 41, 0.07), transparent),
+    radial-gradient(circle, rgba(237, 237, 239, 0.028) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    26px 26px;
   color: var(--foreground);
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -37,7 +57,7 @@ body {
 
 ::selection {
   background: var(--accent);
-  color: #0b0b0d;
+  color: #0a0a0d;
 }
 
 /* Rótulos em versalete monoespaçado — separa metadado de conteúdo sem precisar
@@ -48,6 +68,85 @@ body {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--faint);
+}
+
+/* Pílulas de stack/metadado. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.03em;
+  padding: 0.28rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  white-space: nowrap;
+}
+
+/* O contraponto editorial: serifa itálica só para taglines e takeaways. */
+.editorial {
+  font-family: var(--font-newsreader), ui-serif, Georgia, serif;
+  font-style: italic;
+  letter-spacing: 0.005em;
+}
+
+/* Ponto de status com pulso. */
+.status-dot {
+  position: relative;
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--ok);
+}
+.status-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: var(--ok);
+  animation: pulse-ring 2.4s ease-out infinite;
+}
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  70%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* Entrada suave do herói. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rise {
+    animation: none;
+  }
+  .status-dot::after {
+    animation: none;
+    opacity: 0;
+  }
 }
 
 a:focus-visible,

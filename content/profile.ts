@@ -18,6 +18,11 @@ export const profile = {
 
   availability: "Open to remote roles — worldwide or EU",
 
+  // Fatos curtos para o painel do herói. A prosa completa segue em
+  // `eligibility.detail`; estes são os mesmos fatos em formato de tabela.
+  base: "Florianópolis, Brazil · UTC−3",
+  overlap: "EU 4–5h · US Eastern near-full",
+
   links: {
     email: "fernandoludvig0@gmail.com",
     github: "https://github.com/fernandoludvig",
