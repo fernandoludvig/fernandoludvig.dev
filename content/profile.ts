@@ -24,7 +24,7 @@ export const profile = {
   overlap: "EU 4–5h · US Eastern near-full",
 
   links: {
-    email: "fernandoludvig0@gmail.com",
+    email: "fernandoludvig0804@gmail.com",
     github: "https://github.com/fernandoludvig",
     linkedin: "https://www.linkedin.com/in/fernandoludvig/",
   },
