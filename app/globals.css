@@ -55,6 +55,25 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* O grid global dá textura; estes halos só entram onde há conteúdo de destaque,
+   para o site ter profundidade sem parecer uma UI de dashboard. */
+.hero-shell {
+  position: relative;
+}
+.hero-shell::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 34rem;
+  height: 34rem;
+  right: -12rem;
+  top: -8rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(240, 180, 41, 0.14), transparent 68%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
 ::selection {
   background: var(--accent);
   color: #0a0a0d;
@@ -83,6 +102,141 @@ body {
   color: var(--muted);
   background: color-mix(in srgb, var(--surface) 72%, transparent);
   white-space: nowrap;
+}
+
+/* Herói: diagrama de uma automação real, e não outro bloco de descrição. */
+.architecture-card {
+  position: relative;
+  isolation: isolate;
+}
+.architecture-card::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.32;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to bottom, black, transparent 86%);
+}
+.architecture-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4.25rem minmax(0, 1fr);
+  gap: 0.75rem;
+  min-height: 17.25rem;
+}
+.architecture-column {
+  min-width: 0;
+}
+.architecture-output {
+  text-align: right;
+}
+.architecture-bridge {
+  position: relative;
+  min-height: 100%;
+}
+.bridge-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, var(--border-strong), var(--accent), var(--border-strong));
+  opacity: 0.8;
+}
+.bridge-line::before,
+.bridge-line::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  border: 1px solid var(--accent);
+  border-radius: 9999px;
+  background: var(--surface);
+}
+.bridge-line::before { left: -2px; }
+.bridge-line::after { right: -2px; }
+.bridge-line-top { top: 27%; }
+.bridge-line-middle { top: 50%; }
+.bridge-line-bottom { top: 73%; }
+.bridge-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  width: 2.55rem;
+  height: 2.55rem;
+  transform: translate(-50%, -50%);
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--accent);
+  border-radius: 0.7rem;
+  background: var(--surface-2);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--surface) 85%, transparent),
+    0 0 30px rgba(240, 180, 41, 0.22);
+  color: var(--accent);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+.system-node {
+  min-height: 3.5rem;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--surface-2) 72%, transparent);
+}
+.system-node-accent {
+  border-color: color-mix(in srgb, var(--accent) 36%, var(--border));
+}
+.architecture-output .system-node {
+  background: color-mix(in srgb, var(--accent) 5%, var(--surface-2));
+}
+
+/* Primeiro case é uma peça editorial; os demais são cartões auxiliares. */
+.lead-study {
+  isolation: isolate;
+}
+.lead-study::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(120deg, rgba(240, 180, 41, 0.06), transparent 44%);
+}
+.lead-study-orb {
+  position: absolute;
+  z-index: -1;
+  right: -5rem;
+  bottom: -9rem;
+  width: 22rem;
+  height: 22rem;
+  border: 1px solid rgba(240, 180, 41, 0.15);
+  border-radius: 9999px;
+  box-shadow: 0 0 0 2.8rem rgba(240, 180, 41, 0.025),
+    0 0 0 5.6rem rgba(240, 180, 41, 0.018);
+}
+.study-card {
+  position: relative;
+  overflow: hidden;
+}
+.study-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: var(--accent);
+  transition: transform 250ms ease;
+}
+.study-card:hover::before {
+  transform: scaleX(1);
 }
 
 /* O contraponto editorial: serifa itálica só para taglines e takeaways. */
@@ -146,6 +300,19 @@ body {
   .status-dot::after {
     animation: none;
     opacity: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .architecture-grid {
+    grid-template-columns: minmax(0, 1fr) 3.3rem minmax(0, 1fr);
+    gap: 0.4rem;
+  }
+  .system-node {
+    padding: 0.65rem 0.55rem;
+  }
+  .system-node .font-mono {
+    font-size: 0.66rem;
   }
 }
 

@@ -7,11 +7,17 @@ import { publishedCaseStudies } from "@/content/case-studies";
 const METHOD = ["Problem", "Constraints", "Decisions", "Measured result"];
 
 export default function Home() {
+  // O draft existe para desenvolvimento, mas não deve disputar atenção com o
+  // trabalho que um recrutador encontra no deploy público.
+  const publicStudies = publishedCaseStudies.filter((study) => !study.draft);
+  const leadStudy = publicStudies[0];
+  const remainingStudies = publicStudies.slice(1);
+
   return (
     <div className="mx-auto w-full max-w-5xl px-6">
       {/* Acima da dobra: o que ele faz, e por que a elegibilidade não é problema.
           Nessa ordem, porque a segunda pergunta só importa se a primeira convenceu. */}
-      <section className="grid gap-12 py-20 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-28">
+      <section className="hero-shell grid gap-12 py-16 sm:py-20 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:py-28">
         <div>
           <p className="label rise">{profile.role}</p>
           <h1
@@ -45,30 +51,47 @@ export default function Home() {
           </div>
         </div>
 
-        {/* O conteúdo do site é TypeScript tipado — o painel do herói encena isso. */}
+        {/* Uma tradução visual do que ele constrói: dados entram em sistemas
+            distintos, passam por uma camada de orquestração e viram ação. */}
         <aside
-          className="rise overflow-hidden rounded-lg border border-border bg-surface shadow-[0_24px_60px_rgba(0,0,0,0.35)]"
+          className="rise architecture-card overflow-hidden rounded-xl border border-border bg-surface shadow-[0_28px_90px_rgba(0,0,0,0.42)]"
           style={{ animationDelay: "160ms" }}
-          aria-label="Profile facts"
+          aria-label="AI automation architecture"
         >
-          <div className="flex items-center justify-between border-b border-border bg-surface-2 px-5 py-3">
-            <span className="font-mono text-xs text-muted">profile.ts</span>
-            <span className="label">typed · no CMS</span>
+          <div className="flex items-center justify-between border-b border-border bg-surface-2/80 px-5 py-3.5">
+            <span className="font-mono text-xs text-muted">automation.system</span>
+            <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-ok">
+              <span className="status-dot scale-75" aria-hidden /> live systems
+            </span>
           </div>
-          <dl className="divide-y divide-border">
-            <PanelRow label="status">
-              <span className="flex items-center gap-2.5">
-                <span className="status-dot" aria-hidden />
-                {profile.availability}
-              </span>
-            </PanelRow>
-            <PanelRow label="citizenship">{profile.eligibility.headline}</PanelRow>
-            <PanelRow label="base">{profile.base}</PanelRow>
-            <PanelRow label="overlap">{profile.overlap}</PanelRow>
-            <PanelRow label="now">
-              {profile.now.company} — AI agents in production
-            </PanelRow>
-          </dl>
+          <div className="architecture-grid p-5 sm:p-6">
+            <div className="architecture-column">
+              <span className="label">Systems</span>
+              <div className="mt-4 space-y-3">
+                <SystemNode label="CRM" detail="HubSpot · Salesforce" />
+                <SystemNode label="Inbox" detail="Gmail · Zendesk" />
+                <SystemNode label="Calendar" detail="Google · Calendly" />
+              </div>
+            </div>
+            <div className="architecture-bridge" aria-hidden>
+              <span className="bridge-line bridge-line-top" />
+              <span className="bridge-line bridge-line-middle" />
+              <span className="bridge-line bridge-line-bottom" />
+              <span className="bridge-core">AI</span>
+            </div>
+            <div className="architecture-column architecture-output">
+              <span className="label">Outcomes</span>
+              <div className="mt-4 space-y-3">
+                <SystemNode label="Qualify" detail="route · enrich" accent />
+                <SystemNode label="Resolve" detail="reply · escalate" accent />
+                <SystemNode label="Report" detail="signal · prove ROI" accent />
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 border-t border-border bg-surface-2/45">
+            <PanelFact label="based" value={profile.base} />
+            <PanelFact label="availability" value="Remote · EU" />
+          </div>
         </aside>
       </section>
 
@@ -95,52 +118,14 @@ export default function Home() {
         <div className="flex items-baseline justify-between">
           <h2 className="label">Selected work</h2>
           <span className="font-mono text-xs text-faint">
-            {String(publishedCaseStudies.length).padStart(2, "0")} case studies
+            {String(publicStudies.length).padStart(2, "0")} case studies
           </span>
         </div>
-        <ul className="mt-8 space-y-5">
-          {publishedCaseStudies.map((study, i) => (
+        {leadStudy ? <LeadStudy study={leadStudy} /> : null}
+        <ul className="mt-5 grid gap-5 md:grid-cols-3">
+          {remainingStudies.map((study, i) => (
             <li key={study.slug}>
-              <Link
-                href={`/work/${study.slug}`}
-                className="group block rounded-lg border border-border bg-surface/50 p-6 transition-all hover:border-accent-dim hover:bg-surface sm:p-8"
-              >
-                <div className="flex items-baseline justify-between gap-4">
-                  <div className="flex items-baseline gap-3">
-                    <span className="label">
-                      {study.context} · {study.period}
-                    </span>
-                    {study.draft ? (
-                      <span className="label text-accent">draft — dev only</span>
-                    ) : null}
-                  </div>
-                  <span
-                    aria-hidden
-                    className="font-mono text-sm text-faint transition-colors group-hover:text-accent"
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <h3 className="mt-3 max-w-2xl text-2xl font-medium tracking-tight transition-colors group-hover:text-accent">
-                  {study.title}
-                </h3>
-                <p className="editorial mt-3 max-w-2xl text-[1.05rem] leading-relaxed text-muted">
-                  {study.tagline}
-                </p>
-                <div className="mt-6 flex flex-wrap items-center gap-2">
-                  {study.stack.slice(0, 5).map((item) => (
-                    <span key={item} className="chip">
-                      {item}
-                    </span>
-                  ))}
-                  <span
-                    aria-hidden
-                    className="ml-auto font-mono text-xs text-faint transition-all group-hover:translate-x-1 group-hover:text-accent"
-                  >
-                    Read the case study →
-                  </span>
-                </div>
-              </Link>
+              <StudyCard study={study} index={i + 2} />
             </li>
           ))}
         </ul>
@@ -181,11 +166,98 @@ export default function Home() {
   );
 }
 
-function PanelRow({ label, children }: { label: string; children: React.ReactNode }) {
+function SystemNode({
+  label,
+  detail,
+  accent = false,
+}: {
+  label: string;
+  detail: string;
+  accent?: boolean;
+}) {
   return (
-    <div className="grid grid-cols-[6.5rem_1fr] gap-4 px-5 py-3.5">
-      <dt className="font-mono text-xs leading-6 text-faint">{label}</dt>
-      <dd className="text-sm leading-6 text-foreground">{children}</dd>
+    <div className={`system-node ${accent ? "system-node-accent" : ""}`}>
+      <span className="font-mono text-xs text-foreground">{label}</span>
+      <span className="mt-1 block font-mono text-[10px] leading-relaxed text-faint">{detail}</span>
     </div>
+  );
+}
+
+function PanelFact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="px-5 py-3.5 first:border-r first:border-border sm:px-6">
+      <p className="label text-[9px]">{label}</p>
+      <p className="mt-1.5 text-xs text-muted">{value}</p>
+    </div>
+  );
+}
+
+function LeadStudy({ study }: { study: (typeof publishedCaseStudies)[number] }) {
+  return (
+    <Link
+      href={`/work/${study.slug}`}
+      className="lead-study group relative mt-8 block overflow-hidden rounded-xl border border-border bg-surface p-6 transition-colors hover:border-accent/60 sm:p-9"
+    >
+      <span className="lead-study-orb" aria-hidden />
+      <div className="relative grid gap-8 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
+        <div>
+          <div className="flex items-center gap-3">
+            <span className="label text-accent">01 · selected case</span>
+            <span className="h-px w-12 bg-accent/50" aria-hidden />
+            <span className="label">{study.context} · {study.period}</span>
+          </div>
+          <h3 className="mt-6 max-w-2xl text-3xl font-semibold leading-[1.08] tracking-tight text-foreground transition-colors group-hover:text-accent sm:text-4xl">
+            {study.title}
+          </h3>
+          <p className="editorial mt-5 max-w-2xl text-lg leading-relaxed text-muted">
+            {study.tagline}
+          </p>
+        </div>
+        <div className="relative border-t border-border pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+          <p className="label">Case signal</p>
+          <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted">
+            API design, model-aware tool interfaces, and a public package that fills a real gap.
+          </p>
+          <span className="mt-8 inline-flex items-center gap-3 font-mono text-xs text-foreground transition-all group-hover:gap-5 group-hover:text-accent">
+            Read the case study <span aria-hidden>→</span>
+          </span>
+        </div>
+      </div>
+      <div className="relative mt-8 flex flex-wrap gap-2">
+        {study.stack.slice(0, 5).map((item) => (
+          <span key={item} className="chip">
+            {item}
+          </span>
+        ))}
+      </div>
+    </Link>
+  );
+}
+
+function StudyCard({
+  study,
+  index,
+}: {
+  study: (typeof publishedCaseStudies)[number];
+  index: number;
+}) {
+  return (
+    <Link
+      href={`/work/${study.slug}`}
+      className="study-card group flex h-full flex-col rounded-xl border border-border bg-surface/55 p-6 transition-all hover:-translate-y-1 hover:border-border-strong hover:bg-surface"
+    >
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="label">{study.context}</span>
+        <span className="font-mono text-xs text-faint">{String(index).padStart(2, "0")}</span>
+      </div>
+      <h3 className="mt-5 text-xl font-medium leading-snug tracking-tight text-foreground transition-colors group-hover:text-accent">
+        {study.title}
+      </h3>
+      <p className="editorial mt-4 text-[1rem] leading-relaxed text-muted">{study.tagline}</p>
+      <div className="mt-auto flex items-center justify-between border-t border-border pt-5">
+        <span className="font-mono text-[11px] text-faint">{study.period}</span>
+        <span className="font-mono text-xs text-muted transition-colors group-hover:text-accent">Read →</span>
+      </div>
+    </Link>
   );
 }
